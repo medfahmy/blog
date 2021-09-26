@@ -1,20 +1,26 @@
 import express from "express";
 import { randomBytes } from "crypto";
-
-const app = express();
-app.use(express.json());
+import cors from "cors";
 
 interface Post {
     id: string;
     content: string;
 }
 
+// TODO: save posts to db
 const posts: { [id: string]: Post } = {};
 
 const generateRandomId = () => {
     return randomBytes(4).toString("hex");
 };
 
+const app = express();
+
+//middleware
+app.use(express.json());
+app.use(cors());
+
+// routes
 app.get("/posts/get", (_req, res) => {
     return res.json(posts);
 });

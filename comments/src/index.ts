@@ -1,14 +1,13 @@
 import express from "express";
 import { randomBytes } from "crypto";
-
-const app = express();
-app.use(express.json());
+import cors from "cors";
 
 interface Comment {
     id: string;
     content: string;
 }
 
+// TODO: save comments to db
 const commentsByPostId: { [postId: string]: Comment[] } = {};
 // const commentsByPostId = {};
 
@@ -16,6 +15,14 @@ const generateRandomId = () => {
     return randomBytes(4).toString("hex");
 };
 
+const app = express();
+
+//middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
+
+// routes
 app.get("/posts/:id/comments/get", (req, res) => {
     const postId = req.params.id;
     const comments = commentsByPostId[postId] || [];
