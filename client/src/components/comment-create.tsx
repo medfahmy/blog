@@ -1,22 +1,18 @@
-import axios from "axios"
-import { SyntheticEvent, useState } from "react"
+import axios from "axios";
+import { SyntheticEvent, useState } from "react";
 
 const postCommentsUrl = (postId: string) => {
-    return `http://localhost:4001/posts/${postId}/comments/post`
-}
+    return `http://localhost:4001/posts/${postId}/comments/post`;
+};
 
-interface CommentCreateProps {
-    postId: string
-}
-
-export const CommentCreate: React.FC<CommentCreateProps> = ({ postId }) => {
-    const [content, setContent] = useState("")
+export const CommentCreate = ({ postId }: { postId: string }) => {
+    const [content, setContent] = useState("");
 
     const handleSumbit = async (e: SyntheticEvent) => {
-        e.preventDefault()
-        await axios.post(postCommentsUrl(postId), { content })
-        setContent("")
-    }
+        e.preventDefault();
+        await axios.post(postCommentsUrl(postId), { content });
+        setContent("");
+    };
 
     return (
         <div>
@@ -32,5 +28,5 @@ export const CommentCreate: React.FC<CommentCreateProps> = ({ postId }) => {
                 <button className="btn btn-primary">submit</button>
             </form>
         </div>
-    )
-}
+    );
+};

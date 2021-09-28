@@ -1,11 +1,14 @@
 import express from "express";
 import { randomBytes } from "crypto";
 import cors from "cors";
+import axios from "axios";
 
 interface Comment {
     id: string;
     content: string;
 }
+
+const EVENTS_URL = "http://localhost:4005/events";
 
 // TODO: save comments to db
 const commentsByPostId: { [postId: string]: Comment[] } = {};
@@ -30,23 +33,28 @@ app.get("/posts/:id/comments/get", (req, res) => {
     return res.status(200).json(comments);
 });
 
-app.post("/posts/:id/comments/post", (req, res) => {
+app.post("/posts/:id/comments/post", async (req, res) => {
     const postId = req.params.id;
     const { content } = req.body;
+    const id = generateRandomId();
 
     const comments = commentsByPostId[postId] || [];
-
-    const _comment = {
-        id: generateRandomId(),
-        content,
-    };
-    comments.push(_comment);
-
+    comments.push({ id, content });
     commentsByPostId[postId] = comments;
+
+    await axios.post(EVENTS_URL, {
+        type: "COMMENT_CREATED",
+        data: { id, postId, content },
+    });
 
     return res.status(201).json(comments);
 });
 
+app.post("/events", (req, res) => {
+    console.log("received event", req.body);
+    res.sendStatus(200);
+});
+
 app.listen(4001, () => {
-    console.log("server running at http://localhost:4000");
+    console.log("listening on port 4001");
 });

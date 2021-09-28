@@ -1,13 +1,14 @@
 import axios from "axios";
 import { SyntheticEvent, useState } from "react";
-import { POSTS_URL } from "./post-list";
+
+const CREATE_POST_URL = "http://localhost:4000/posts/post";
 
 export const PostCreate: React.FC = () => {
     const [content, setContent] = useState("");
 
     const handleSubmit = async (event: SyntheticEvent) => {
         event.preventDefault();
-        await axios.post(`${POSTS_URL}/post`, { content });
+        await axios.post(CREATE_POST_URL, { content });
         setContent("");
     };
 
