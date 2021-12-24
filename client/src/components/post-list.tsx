@@ -12,12 +12,8 @@ interface Post {
     comments: Comment[];
 }
 
-interface Posts {
-    [id: string]: Post;
-}
-
 export const PostList = () => {
-    const [posts, setPosts] = useState<Posts>({});
+    const [posts, setPosts] = useState<Record<string, Post>>({});
 
     const fetchPosts = async (url: string) => {
         const res = await axios.get(url);
